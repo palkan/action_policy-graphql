@@ -81,4 +81,49 @@ describe "#expose_authorization_rules", :aggregate_failures do
       expect(data.fetch("canIDestroy").fetch("reasons")).to be_nil
     end
   end
+
+  context "namespaced" do
+    let(:query) do
+      %({
+          me {
+            allPosts {
+              title
+              canShow {
+                value
+                message
+                reasons {
+                  details
+                  fullMessages
+                }
+              }
+            }
+          }
+        })
+    end
+
+    let(:field) { "me->allPosts" }
+
+    before do
+      allow(Me).to receive(:posts) { [post] }
+    end
+
+    context "when failure" do
+      let(:post) { Post.new("not mine") }
+
+      specify do
+        expect(data.first.fetch("canShow").fetch("value")).to eq false
+        expect(data.first.fetch("canShow").fetch("message")).to eq "Cannot show post"
+      end
+    end
+
+    context "when success" do
+      let(:post) { Post.new("story of my life") }
+
+      specify do
+        expect(data.first.fetch("canShow").fetch("value")).to eq true
+        expect(data.first.fetch("canShow").fetch("message")).to be_nil
+        expect(data.first.fetch("canShow").fetch("reasons")).to be_nil
+      end
+    end
+  end
 end

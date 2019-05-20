@@ -2,7 +2,15 @@
 
 class Post < Struct.new(:title); end
 
+class PostList < Array
+  def policy_name
+    "#{first.class}Policy"
+  end
+end
+
 class PostPolicy < ActionPolicy::Base
+  scope_matcher :data, PostList
+
   scope_for :data do |data|
     next data if admin?
 
@@ -73,6 +81,51 @@ class PostType < BaseType
   expose_authorization_rules :destroy?, prefix: "can_i_"
 end
 
+# Namespaced types
+module Me
+  class << self
+    attr_accessor :posts, :post
+  end
+
+  class PostPolicy < ::PostPolicy
+    scope_for :data do |data|
+      data.select { |post| post.title.match?(/\bmy\b/) }
+    end
+
+    def show?
+      record.title.match?(/\bmy\b/)
+    end
+  end
+
+  class PostType < BaseType
+    graphql_name "MyPostType"
+
+    field :title, String, null: false
+
+    expose_authorization_rules :show?, prefix: "can_"
+
+    def title
+      "My #{object.title}"
+    end
+  end
+
+  class RootType < BaseType
+    field :bio, PostType, null: false, authorize: true
+    field :posts, [PostType], null: false, authorized_scope: true
+    field :all_posts, [PostType], null: false
+
+    def bio
+      Me.post
+    end
+
+    def posts
+      Me.posts
+    end
+
+    alias all_posts posts
+  end
+end
+
 class Schema < GraphQL::Schema
   class << self
     attr_accessor :posts, :post
@@ -83,11 +136,17 @@ class Schema < GraphQL::Schema
       "Query"
     end
 
+    field :me, Me::RootType, null: false
+
     field :post, PostType, null: false
     field :auth_post, PostType, null: false, authorize: true
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
     field :another_post, PostType, null: false, authorize: {to: :preview?, with: AnotherPostPolicy}
     field :posts, [PostType], null: false, authorized_scope: {type: :data, with: PostPolicy}
+
+    def me
+      {}
+    end
 
     def post
       Schema.post

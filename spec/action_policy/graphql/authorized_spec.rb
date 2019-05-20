@@ -21,7 +21,7 @@ describe "authorize: *, authorized_scope: *", :aggregate_failures do
     end
 
     before do
-      allow(Schema).to receive(:posts) { posts }
+      allow(Schema).to receive(:posts) { PostList.new(posts) }
     end
 
     it "has authorized scope" do
@@ -45,6 +45,28 @@ describe "authorize: *, authorized_scope: *", :aggregate_failures do
             "public-b"
           ]
         )
+      end
+    end
+
+    context "namespaced" do
+      let(:posts) { [Post.new("not mine"), Post.new("story of my life")] }
+      let(:query) do
+        %({
+            me {
+              posts {
+                title
+              }
+            }
+          })
+      end
+
+      before do
+        allow(Me).to receive(:posts) { PostList.new(posts) }
+      end
+
+      it "has authorized scope" do
+        expect { subject }.to have_authorized_scope(:data)
+          .with(Me::PostPolicy)
       end
     end
   end
@@ -114,6 +136,27 @@ describe "authorize: *, authorized_scope: *", :aggregate_failures do
 
       it "returns nil" do
         expect(data).to be_nil
+      end
+    end
+
+    context "namespaced" do
+      let(:query) do
+        %({
+            me {
+              bio {
+                title
+              }
+            }
+          })
+      end
+
+      before do
+        allow(Me).to receive(:post) { post }
+      end
+
+      it "is authorized" do
+        expect { subject }.to be_authorized_to(:show?, post)
+          .with(Me::PostPolicy)
       end
     end
   end
