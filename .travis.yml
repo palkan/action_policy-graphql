@@ -1,0 +1,33 @@
+sudo: false
+language: ruby
+cache: bundler
+notifications:
+  email: false
+
+before_install:
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
+
+script:
+  - bundle exec rake
+
+matrix:
+  fast_finish: true
+  include:
+    - rvm: ruby-head
+      gemfile: gemfiles/graphqlmaster.gemfile
+    - rvm: 2.6
+      gemfile: gemfiles/graphqlmaster.gemfile
+    - rvm: jruby-9.2.5.0
+      gemfile: gemfiles/jruby.gemfile
+    - rvm: 2.6
+      gemfile: Gemfile
+    - rvm: 2.5
+      gemfile: Gemfile
+    - rvm: 2.4
+      gemfile: Gemfile
+  allow_failures:
+    - rvm: ruby-head
+      gemfile: gemfiles/graphqlmaster.gemfile
+    - rvm: 2.6
+      gemfile: gemfiles/graphqlmaster.gemfile
