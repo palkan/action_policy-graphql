@@ -3,6 +3,11 @@
 require "action_policy/graphql/types/authorization_result"
 
 module ActionPolicy
+  unless "".respond_to?(:then)
+    require "action_policy/ext/yield_self_then"
+    using ActionPolicy::Ext::YieldSelfThen
+  end
+
   module GraphQL
     # Add DSL to add policy rules as fields
     #
@@ -22,7 +27,7 @@ module ActionPolicy
       end
 
       def allowance_to(rule, target = object, **options)
-        policy_for(record: target, **options).yield_self do |policy|
+        policy_for(record: target, **options).then do |policy|
           policy.apply(authorization_rule_for(policy, rule))
           policy.result
         end
