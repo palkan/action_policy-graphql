@@ -50,7 +50,7 @@ end
 
 You can add authorization to the fields by specifying the `authorize: *` option:
 
-```
+```ruby
 field :home, Home, null: false, authorize: true do
   argument :id, ID, required: true
 end
