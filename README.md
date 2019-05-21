@@ -32,7 +32,7 @@ And then execute:
 
 **NOTE:** this is a quick overview of the functionality provided by the gem. For more information see the [documentation](https://actionpolicy.evilmartians.io/#/graphql).
 
-To start using Action Policy in GraphQL-related code you need to enhance your base classes with `ActionPolicy::GraphQL::Behaviour`:
+To start using Action Policy in GraphQL-related code, you need to enhance your base classes with `ActionPolicy::GraphQL::Behaviour`:
 
 ```ruby
 # For fields authorization, lists scoping and rules exposing
