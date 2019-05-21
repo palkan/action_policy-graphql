@@ -75,7 +75,7 @@ end
 
 You can customize the authorization options, e.g. `authorize: {to: :preview?, with: CustomPolicy}`.
 
-### `authorized_scope`
+### `authorized_scope: *`
 
 You can add `authorized_scope: true` option to the field (list or _connection_ field) to
 apply the corresponding policy rules to the data:
@@ -119,8 +119,8 @@ Then the client could perform the following query:
       message
       # detailed information about the decline reasons; null if value is true
       reasons {
-        details # JSON-encoded hash of the form { "community/event" => [:privacy_off?] }
-        fullMessages # Array of human-readable reasons
+        details # JSON-encoded hash of the failure reasons (e.g., {"event" => [:seats_available?]})
+        fullMessages # Array of human-readable reasons (e.g., ["This event is sold out"])
       }
     }
 
