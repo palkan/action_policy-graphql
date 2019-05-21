@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 
-using(Module.new do
-  refine Hash do
-    def camelize_keys
-      transform_keys { |key| GraphQL::Schema::Member::BuildType.camelize(key.to_s) }.tap do |h|
-        h.keys.each do |k|
-          next unless h[k].is_a?(Hash)
-
-          h[k] = h[k].camelize_keys
-        end
-      end
-    end
-  end
-end)
-
 shared_context "common:graphql" do
   let(:context) { {} }
   let(:variables) { {} }
@@ -35,7 +21,7 @@ shared_context "common:graphql" do
     schema.execute(
       query,
       context: context,
-      variables: variables.camelize_keys
+      variables: variables
     )
   end
 end
