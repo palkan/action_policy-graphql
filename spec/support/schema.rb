@@ -74,6 +74,14 @@ class BaseType < ::GraphQL::Schema::Object
   end
 end
 
+class BaseResolver < ::GraphQL::Schema::Resolver
+  include ActionPolicy::GraphQL::Behaviour
+
+  def current_user
+    context.fetch(:user, :user)
+  end
+end
+
 class PostType < BaseType
   field :title, String, null: false
 
@@ -131,6 +139,16 @@ class Schema < GraphQL::Schema
     attr_accessor :posts, :post
   end
 
+  class PostResolver < BaseResolver
+    type PostType, null: false
+
+    def resolve
+      Schema.post.tap do |post|
+        authorize! post, to: :show?
+      end
+    end
+  end
+
   query(Class.new(BaseType) do
     def self.name
       "Query"
@@ -139,6 +157,7 @@ class Schema < GraphQL::Schema
     field :me, Me::RootType, null: false
 
     field :post, PostType, null: false
+    field :resolved_post, resolver: PostResolver
     field :auth_post, PostType, null: false, authorize: true
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
     field :another_post, PostType, null: false, authorize: {to: :preview?, with: AnotherPostPolicy}

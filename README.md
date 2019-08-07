@@ -44,6 +44,11 @@ end
 class Types::BaseMutation < GraphQL::Schema::Mutation
   include ActionPolicy::GraphQL::Behaviour
 end
+
+# For using authorization helpers in resolvers
+class Types::BaseResolver < GraphQL::Schema::Resolver
+  include ActionPolicy::GraphQL::Behaviour
+end
 ```
 
 ### `authorize: *`
