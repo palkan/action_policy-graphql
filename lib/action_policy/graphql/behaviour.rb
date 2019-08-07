@@ -12,10 +12,12 @@ module ActionPolicy
         base.include ActionPolicy::Behaviours::Memoized
         base.include ActionPolicy::Behaviours::Namespaced
 
-        base.field_class.prepend(ActionPolicy::GraphQL::AuthorizedField)
         base.authorize :user, through: :current_user
 
-        base.include ActionPolicy::GraphQL::Fields
+        if base.respond_to?(:field_class)
+          base.field_class.prepend(ActionPolicy::GraphQL::AuthorizedField)
+          base.include ActionPolicy::GraphQL::Fields
+        end
       end
 
       def current_user

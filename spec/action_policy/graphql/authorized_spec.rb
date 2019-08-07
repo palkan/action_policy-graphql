@@ -159,5 +159,24 @@ describe "authorize: *, authorized_scope: *", :aggregate_failures do
           .with(Me::PostPolicy)
       end
     end
+
+    context "with resolver" do
+      let(:query) do
+        %({
+            resolvedPost {
+              title
+            }
+          })
+      end
+
+      before do
+        allow(Me).to receive(:post) { post }
+      end
+
+      it "is authorized" do
+        expect { subject }.to be_authorized_to(:show?, post)
+          .with(PostPolicy)
+      end
+    end
   end
 end
