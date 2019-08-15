@@ -1,3 +1,5 @@
+# Change log
+
 ## master (unreleased)
 
 ## 0.2.0 (2019-08-15)
