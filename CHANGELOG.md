@@ -1,5 +1,7 @@
 ## master (unreleased)
 
+## 0.2.0 (2019-08-15)
+
 - Add ability to specify a field name explicitly. ([@palkan][])
 
 Now you can write, for example:
