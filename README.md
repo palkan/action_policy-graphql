@@ -136,6 +136,16 @@ Then the client could perform the following query:
 }
 ```
 
+You can specify a custom field name as well (only for a single rule):
+
+```ruby
+class ProfileType < ::Common::Graphql::Type
+  # Adds can_create_post field.
+
+  expose_authorization_rules :create?, with: PostPolicy, field_name: "can_create_post"
+end
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/palkan/action_policy-graphql.

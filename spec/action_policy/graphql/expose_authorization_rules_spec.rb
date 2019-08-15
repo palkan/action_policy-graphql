@@ -126,4 +126,29 @@ describe "#expose_authorization_rules", :aggregate_failures do
       end
     end
   end
+
+  context "with field_name" do
+    let(:query) do
+      %({
+        me {
+          canCreatePost {
+            value
+            message
+            reasons {
+              details
+              fullMessages
+            }
+          }
+        }
+      })
+    end
+
+    let(:field) { "me" }
+
+    specify do
+      expect(data.fetch("canCreatePost").fetch("value")).to eq true
+      expect(data.fetch("canCreatePost").fetch("message")).to be_nil
+      expect(data.fetch("canCreatePost").fetch("reasons")).to be_nil
+    end
+  end
 end

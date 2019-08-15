@@ -34,15 +34,17 @@ module ActionPolicy
       end
 
       module ClassMethods
-        def expose_authorization_rules(*rules, prefix: ::ActionPolicy::GraphQL.default_authorization_field_prefix, **options)
-          rules.each do |rule|
-            field_name = "#{prefix}#{rule.to_s.delete("?")}"
+        def expose_authorization_rules(*rules, field_name: nil, prefix: ::ActionPolicy::GraphQL.default_authorization_field_prefix, **options)
+          raise ArgumentError, "Cannot specify field_name for multiple rules" if rules.size > 1 && !field_name.nil?
 
-            field field_name,
+          rules.each do |rule|
+            gql_field_name = field_name || "#{prefix}#{rule.to_s.delete("?")}"
+
+            field gql_field_name,
                   ActionPolicy::GraphQL::Types::AuthorizationResult,
                   null: false
 
-            define_method(field_name) do
+            define_method(gql_field_name) do
               allowance_to(rule, options)
             end
           end

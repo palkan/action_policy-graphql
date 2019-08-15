@@ -19,6 +19,10 @@ class PostPolicy < ActionPolicy::Base
 
   pre_check :allow_admins
 
+  def create?
+    true
+  end
+
   def public?
     record.title.start_with?("public")
   end
@@ -121,6 +125,8 @@ module Me
     field :bio, PostType, null: false, authorize: true
     field :posts, [PostType], null: false, authorized_scope: true
     field :all_posts, [PostType], null: false
+
+    expose_authorization_rules :create?, with: PostPolicy, field_name: :can_create_post
 
     def bio
       Me.post
