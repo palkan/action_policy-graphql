@@ -9,7 +9,7 @@ This gem provides an integration for using [Action Policy](https://github.com/pa
 This integration includes the following features:
 - Fields & mutations authorization
 - List and connections scoping
-- [**Exposing permissions/authorization rules in the API**](https://dev.to/evilmartians/exposing-permissions-in-graphql-apis-with-action-policy-1mfh).
+- [**Exposing permissions/authorization rules in the API**](https://evilmartians.com/chronicles/exposing-permissions-in-graphql-apis-with-action-policy).
 
 📑 [Documentation](https://actionpolicy.evilmartians.io/#/graphql)
 
