@@ -2,6 +2,9 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
+# This turns off per-thread caching in action_policy
+ENV["RACK_ENV"] = "test"
+
 require "i18n"
 require "action_policy-graphql"
 begin
