@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.3.0 (2019-10-21)
+
 - Add `preauthorize: *` option to perform authorization prior to resolving fields. ([@palkan][])
 
 ## 0.2.0 (2019-08-15)
