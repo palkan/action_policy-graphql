@@ -19,6 +19,15 @@ class PostPolicy < ActionPolicy::Base
 
   pre_check :allow_admins
 
+  def index?
+    true
+  end
+
+  def view_secret_posts?
+    # allow_admins pre-check allows admin access
+    false
+  end
+
   def create?
     true
   end
@@ -49,6 +58,11 @@ end
 class AnotherPostPolicy < PostPolicy
   def preview?
     public? && show?
+  end
+
+  def maybe_preview?
+    # only admins can preview (controlled by pre-check)
+    false
   end
 end
 
@@ -166,8 +180,11 @@ class Schema < GraphQL::Schema
     field :resolved_post, resolver: PostResolver
     field :auth_post, PostType, null: false, authorize: true
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
+    field :secret_post, PostType, null: true, preauthorize: {with: AnotherPostPolicy, raise: false, to: :maybe_preview?}
     field :another_post, PostType, null: false, authorize: {to: :preview?, with: AnotherPostPolicy}
     field :posts, [PostType], null: false, authorized_scope: {type: :data, with: PostPolicy}
+    field :all_posts, [PostType], null: false, preauthorize: {with: PostPolicy}
+    field :secret_posts, [PostType], null: false, preauthorize: {to: :view_secret_posts?, with: PostPolicy}
 
     def me
       {}
@@ -180,9 +197,13 @@ class Schema < GraphQL::Schema
     alias_method :auth_post, :post
     alias_method :another_post, :post
     alias_method :non_raising_post, :post
+    alias_method :secret_post, :post
 
     def posts
       Schema.posts
     end
+
+    alias_method :secret_posts, :posts
+    alias_method :all_posts, :posts
   end)
 end

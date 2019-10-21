@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "authorize: *, authorized_scope: *", :aggregate_failures do
+describe "field extensions", :aggregate_failures do
   include_context "common:graphql"
 
   let(:user) { :user }
@@ -176,6 +176,84 @@ describe "authorize: *, authorized_scope: *", :aggregate_failures do
       it "is authorized" do
         expect { subject }.to be_authorized_to(:show?, post)
           .with(PostPolicy)
+      end
+    end
+  end
+
+  context "preauthorize: *" do
+    context "collection" do
+      let(:posts) { [Post.new("private-a"), Post.new("public-b")] }
+      let(:query) do
+        %({
+            secretPosts {
+              title
+            }
+          })
+      end
+
+      before do
+        allow(Schema).to receive(:posts) { PostList.new(posts) }
+      end
+
+      it "is authorized" do
+        expect { subject }.to be_authorized_to(:view_secret_posts?, "secretPosts")
+          .with(PostPolicy)
+      end
+
+      specify "as user" do
+        expect { subject }.to raise_error(ActionPolicy::Unauthorized)
+      end
+
+      context "as admin" do
+        let(:user) { :admin }
+
+        specify do
+          expect(data.size).to eq 2
+        end
+      end
+
+      context "with default collection rule" do
+        let(:query) do
+          %({
+              allPosts {
+                title
+              }
+            })
+        end
+
+        it "is authorized" do
+          expect { subject }.to be_authorized_to(:index?, "allPosts")
+            .with(PostPolicy)
+        end
+      end
+    end
+
+    context "field" do
+      let(:post) { Post.new("private-a") }
+      let(:query) do
+        %({
+            secretPost {
+              title
+            }
+          })
+      end
+
+      before do
+        allow(Schema).to receive(:post) { post }
+      end
+
+      it "doesn't resolve field if auth failed" do
+        expect(data).to be_nil
+        expect(Schema).to_not have_received(:post)
+      end
+
+      context "as admin" do
+        let(:user) { :admin }
+
+        specify do
+          expect(data.fetch("title")).to eq(post.title)
+          expect(Schema).to have_received(:post)
+        end
       end
     end
   end
