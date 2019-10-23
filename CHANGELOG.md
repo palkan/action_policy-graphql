@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+- Add support for using Action Policy methods in `self.authorized?`. ([@palkan][])
+
 ## 0.3.0 (2019-10-21)
 
 - Add `preauthorize: *` option to perform authorization prior to resolving fields. ([@palkan][])

@@ -107,6 +107,29 @@ class PostType < BaseType
   expose_authorization_rules :destroy?, prefix: "can_i_"
 end
 
+class AuthorizedPostType < PostType
+  def self.authorized?(object, context)
+    super &&
+      allowed_to?(
+        :show?,
+        object,
+        context: {user: context[:current_user]}
+      )
+  end
+end
+
+module MyNamespace
+  class PostPolicy < ::PostPolicy
+    def show?
+      true
+    end
+  end
+
+  class PostType < ::AuthorizedPostType
+    graphql_name "MyNamespacePost"
+  end
+end
+
 # Namespaced types
 module Me
   class << self
@@ -177,6 +200,8 @@ class Schema < GraphQL::Schema
     field :me, Me::RootType, null: false
 
     field :post, PostType, null: false
+    field :authorized_post, AuthorizedPostType, null: true
+    field :authorized_namespaced_post, MyNamespace::PostType, null: true
     field :resolved_post, resolver: PostResolver
     field :auth_post, PostType, null: false, authorize: true
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
@@ -194,6 +219,8 @@ class Schema < GraphQL::Schema
       Schema.post
     end
 
+    alias_method :authorized_post, :post
+    alias_method :authorized_namespaced_post, :post
     alias_method :auth_post, :post
     alias_method :another_post, :post
     alias_method :non_raising_post, :post
