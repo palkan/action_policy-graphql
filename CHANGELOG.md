@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.3.1 (2019-10-23)
+
 - Add support for using Action Policy methods in `self.authorized?`. ([@palkan][])
 
 ## 0.3.0 (2019-10-21)
