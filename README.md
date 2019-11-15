@@ -80,6 +80,8 @@ end
 
 You can customize the authorization options, e.g. `authorize: {to: :preview?, with: CustomPolicy}`.
 
+If you don't want to raise an exception but return a null instead, you should set a `raise: false` option.
+
 ### `authorized_scope: *`
 
 You can add `authorized_scope: true` option to the field (list or _connection_ field) to
