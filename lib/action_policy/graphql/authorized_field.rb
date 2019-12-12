@@ -13,52 +13,61 @@ module ActionPolicy
     #     field :comments, null: false, authorized: { type: :relation, with: MyPostPolicy }
     #   end
     module AuthorizedField
-      class AuthorizeExtension < ::GraphQL::Schema::FieldExtension
-        def initialize(*)
-          super
-          options[:to] ||= ::ActionPolicy::GraphQL.default_authorize_rule
-          options[:raise] = ::ActionPolicy::GraphQL.authorize_raise_exception unless options.key?(:raise)
+      class Extension < ::GraphQL::Schema::FieldExtension
+        def extract_option(key, &default)
+          value = options.fetch(key, &default)
+          options.delete key
+          value
+        end
+      end
+
+      class AuthorizeExtension < Extension
+        def apply
+          @to = extract_option(:to) { ::ActionPolicy::GraphQL.default_authorize_rule }
+          @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
         end
 
         def after_resolve(value:, context:, object:, **_rest)
           return value if value.nil?
 
-          if options[:raise]
-            object.authorize! value, **options
+          if @raise
+            object.authorize! value, to: @to, **options
             value
           else
-            object.allowed_to?(options[:to], value, options) ? value : nil
+            object.allowed_to?(@to, value, **options) ? value : nil
           end
         end
       end
 
-      class PreauthorizeExtension < ::GraphQL::Schema::FieldExtension
-        def initialize(*)
-          super
+      class PreauthorizeExtension < Extension
+        def apply
           if options[:with].nil?
             raise ArgumentError, "You must specify the policy for preauthorization: " \
                                  "`field :#{field.name}, preauthorize: {with: SomePolicy}`"
           end
-          options[:to] ||=
+
+          @to = extract_option(:to) do
             if field.type.list?
               ::ActionPolicy::GraphQL.default_preauthorize_list_rule
             else
               ::ActionPolicy::GraphQL.default_preauthorize_node_rule
             end
-          options[:raise] = ::ActionPolicy::GraphQL.authorize_raise_exception unless options.key?(:raise)
+          end
+
+          @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
         end
 
         def resolve(context:, object:, arguments:, **_rest)
-          if options[:raise]
-            object.authorize! field.name, **options
+          if @raise
+            object.authorize! field.name, to: @to, **options
             yield object, arguments
-          elsif object.allowed_to?(options[:to], field.name, options)
+          elsif object.allowed_to?(@to, field.name, **options)
             yield object, arguments
           end
         end
       end
 
-      class ScopeExtension < ::GraphQL::Schema::FieldExtension
+      class ScopeExtension < Extension
         def after_resolve(value:, context:, object:, **_rest)
           return value if value.nil?
 

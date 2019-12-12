@@ -11,6 +11,6 @@ if File.exist?(local_gemfile)
   # Specify custom action_policy/graphql-ruby version in Gemfile.local
   eval(File.read(local_gemfile)) # rubocop:disable Security/Eval
 else
-  gem "action_policy", "~> 0.3.0"
+  gem "action_policy", "~> 0.4.0"
   gem "graphql", "~> 1.9.3"
 end
