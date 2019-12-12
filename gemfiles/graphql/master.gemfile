@@ -2,4 +2,4 @@ source "https://rubygems.org"
 
 gem "graphql", github: "rmosolgo/graphql-ruby"
 
-gemspec path: ".."
+gemspec path: "../.."
