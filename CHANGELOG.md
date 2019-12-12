@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 0.3.2 (2019-12-12)
+
+- Fix compatibility with Action Policy 0.4.0 ([@haines][])
+
 ## 0.3.1 (2019-10-23)
 
 - Add support for using Action Policy methods in `self.authorized?`. ([@palkan][])
@@ -30,3 +34,4 @@ Action Policy helpers there.
 - Initial version. ([@palkan][])
 
 [@palkan]: https://github.com/palkan
+[@haines]: https://github.com/haines
