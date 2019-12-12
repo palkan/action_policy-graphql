@@ -13,7 +13,23 @@ module ActionPolicy
     #     field :comments, null: false, authorized: { type: :relation, with: MyPostPolicy }
     #   end
     module AuthorizedField
-      class AuthorizeExtension < ::GraphQL::Schema::FieldExtension
+      class Extension < ::GraphQL::Schema::FieldExtension
+        EXCLUDE_OPTIONS = {
+          authorize!: [:raise],
+          allowed_to?: [:raise, :to],
+          authorized_scope: []
+        }.freeze
+
+        def options_for(method)
+          EXCLUDE_OPTIONS
+            .fetch(method)
+            .each_with_object(options.dup) do |key, filtered_options|
+              filtered_options.delete key
+            end
+        end
+      end
+
+      class AuthorizeExtension < Extension
         def initialize(*)
           super
           options[:to] ||= ::ActionPolicy::GraphQL.default_authorize_rule
@@ -24,15 +40,15 @@ module ActionPolicy
           return value if value.nil?
 
           if options[:raise]
-            object.authorize! value, **options
+            object.authorize! value, **options_for(:authorize!)
             value
           else
-            object.allowed_to?(options[:to], value, options) ? value : nil
+            object.allowed_to?(options[:to], value, **options_for(:allowed_to?)) ? value : nil
           end
         end
       end
 
-      class PreauthorizeExtension < ::GraphQL::Schema::FieldExtension
+      class PreauthorizeExtension < Extension
         def initialize(*)
           super
           if options[:with].nil?
@@ -50,19 +66,19 @@ module ActionPolicy
 
         def resolve(context:, object:, arguments:, **_rest)
           if options[:raise]
-            object.authorize! field.name, **options
+            object.authorize! field.name, **options_for(:authorize!)
             yield object, arguments
-          elsif object.allowed_to?(options[:to], field.name, options)
+          elsif object.allowed_to?(options[:to], field.name, **options_for(:allowed_to?))
             yield object, arguments
           end
         end
       end
 
-      class ScopeExtension < ::GraphQL::Schema::FieldExtension
+      class ScopeExtension < Extension
         def after_resolve(value:, context:, object:, **_rest)
           return value if value.nil?
 
-          object.authorized_scope(value, **options)
+          object.authorized_scope(value, **options_for(:authorized_scope))
         end
       end
 
