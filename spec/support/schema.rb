@@ -115,7 +115,7 @@ class PostType < BaseType
   field :another_secret_title, String, null: true, authorize_field: {to: :preview?, with: AnotherPostPolicy}
 
   expose_authorization_rules :edit?, :show?, prefix: "can_"
-  expose_authorization_rules :destroy?, prefix: "can_i_"
+  expose_authorization_rules :destroy?, prefix: "can_i_", field_options: {camelize: false}
 
   def secret_title
     "Secret #{object.title}"

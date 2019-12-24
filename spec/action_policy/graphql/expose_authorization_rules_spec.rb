@@ -28,7 +28,7 @@ describe "#expose_authorization_rules", :aggregate_failures do
               fullMessages
             }
           }
-          canIDestroy {
+          can_i_destroy {
             value
             message
             reasons {
@@ -50,12 +50,12 @@ describe "#expose_authorization_rules", :aggregate_failures do
       expect(data.fetch("canEdit").fetch("value")).to eq false
       expect(data.fetch("canEdit").fetch("message")).to eq "You shall not do this"
 
-      expect(data.fetch("canIDestroy").fetch("value")).to eq false
-      expect(data.fetch("canIDestroy").fetch("message")).to eq "You shall not do this"
+      expect(data.fetch("can_i_destroy").fetch("value")).to eq false
+      expect(data.fetch("can_i_destroy").fetch("message")).to eq "You shall not do this"
     end
 
     specify "#reasons" do
-      reasons = data.fetch("canIDestroy").fetch("reasons")
+      reasons = data.fetch("can_i_destroy").fetch("reasons")
 
       expect(reasons.fetch("details")).to eq(
         {post: [:public?]}.to_json
@@ -76,9 +76,9 @@ describe "#expose_authorization_rules", :aggregate_failures do
       expect(data.fetch("canShow").fetch("message")).to be_nil
       expect(data.fetch("canShow").fetch("reasons")).to be_nil
 
-      expect(data.fetch("canIDestroy").fetch("value")).to eq true
-      expect(data.fetch("canIDestroy").fetch("message")).to be_nil
-      expect(data.fetch("canIDestroy").fetch("reasons")).to be_nil
+      expect(data.fetch("can_i_destroy").fetch("value")).to eq true
+      expect(data.fetch("can_i_destroy").fetch("message")).to be_nil
+      expect(data.fetch("can_i_destroy").fetch("reasons")).to be_nil
     end
   end
 

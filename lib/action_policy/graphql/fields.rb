@@ -24,7 +24,7 @@ module ActionPolicy
       end
 
       module ClassMethods
-        def expose_authorization_rules(*rules, field_name: nil, prefix: ::ActionPolicy::GraphQL.default_authorization_field_prefix, **options)
+        def expose_authorization_rules(*rules, field_name: nil, prefix: ::ActionPolicy::GraphQL.default_authorization_field_prefix, field_options: {}, **options)
           raise ArgumentError, "Cannot specify field_name for multiple rules" if rules.size > 1 && !field_name.nil?
 
           rules.each do |rule|
@@ -32,7 +32,8 @@ module ActionPolicy
 
             field gql_field_name,
               ActionPolicy::GraphQL::Types::AuthorizationResult,
-              null: false
+              null: false,
+              **field_options
 
             define_method(gql_field_name) do
               allowance_to(rule, object, **options)

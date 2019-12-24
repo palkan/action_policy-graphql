@@ -2,6 +2,17 @@
 
 ## master (unreleased)
 
+- Add ability to specify custom field options for `expose_authorization_rules`. ([@bibendi][])
+
+Now you can add additional options for underflying `field` call via `field_options` parameter:
+
+```ruby
+expose_authorization_rules :show?, field_options: {camelize: false}
+
+# equals to
+field :can_show, ActionPolicy::GraphQL::Types::AuthorizationResult, null: false, camelize: false
+```
+
 ## 0.4.0 (2010-03-11)
 
 - **Require Ruby 2.5+**. ([@palkan][])
@@ -42,3 +53,4 @@ Action Policy helpers there.
 [@palkan]: https://github.com/palkan
 [@haines]: https://github.com/haines
 [@sponomarev]: https://github.com/sponomarev
+[@bibendi]: https://github.com/bibendi
