@@ -86,11 +86,13 @@ module ActionPolicy
                                "options could be specified."
         end
 
-        kwargs[:extensions] ||= []
+        extensions = kwargs.key?(:extensions) ? kwargs[:extensions] : []
 
-        add_extension! kwargs[:extensions], AuthorizeExtension, authorize
-        add_extension! kwargs[:extensions], ScopeExtension, authorized_scope
-        add_extension! kwargs[:extensions], PreauthorizeExtension, preauthorize
+        add_extension! extensions, AuthorizeExtension, authorize
+        add_extension! extensions, ScopeExtension, authorized_scope
+        add_extension! extensions, PreauthorizeExtension, preauthorize
+
+        kwargs[:extensions] = extensions
 
         super(*args, **kwargs, &block)
       end
