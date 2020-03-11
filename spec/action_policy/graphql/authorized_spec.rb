@@ -257,4 +257,76 @@ describe "field extensions", :aggregate_failures do
       end
     end
   end
+
+  context "authorize_field: *" do
+    let(:post) { Post.new("title") }
+    let(:query) do
+      %({
+          post {
+            secretTitle
+          }
+        })
+    end
+
+    before do
+      allow(post).to receive(:title).and_call_original
+      allow(Schema).to receive(:post) { post }
+    end
+
+    it "is authorized with object policy" do
+      expect { subject }.to be_authorized_to(:secret_title?, post)
+        .with(PostPolicy)
+    end
+
+    it "doesn't resolve field if auth failed" do
+      expect { subject }.to raise_error(ActionPolicy::Unauthorized)
+      expect(post).to_not have_received(:title)
+    end
+
+    context "as admin" do
+      let(:user) { :admin }
+
+      specify do
+        expect(data.fetch("secretTitle")).to eq("Secret #{post.title}")
+      end
+    end
+
+    context "non-raising authorize" do
+      let(:query) do
+        %({
+            post {
+              silentSecretTitle
+            }
+          })
+      end
+
+      it "returns nil" do
+        expect(data.fetch("silentSecretTitle")).to be_nil
+        expect(post).to_not have_received(:title)
+      end
+
+      context "as admin" do
+        let(:user) { :admin }
+
+        specify do
+          expect(data.fetch("silentSecretTitle")).to eq("Secret #{post.title}")
+        end
+      end
+    end
+
+    context "with options" do
+      let(:query) do
+        %({
+            post {
+              anotherSecretTitle
+            }
+          })
+      end
+
+      it "is authorized" do
+        expect { subject }.to be_authorized_to(:preview?, post)
+          .with(AnotherPostPolicy)
+      end
+    end
+  end
 end

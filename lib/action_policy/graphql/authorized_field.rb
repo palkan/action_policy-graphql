@@ -67,6 +67,28 @@ module ActionPolicy
         end
       end
 
+      class AuthorizeFieldExtension < Extension
+        def apply
+          @to = extract_option(:to) { underscored_field_name }
+          @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
+        end
+
+        def resolve(context:, object:, arguments:, **_rest)
+          if @raise
+            object.authorize! object.object, to: @to, **options
+            yield object, arguments
+          elsif object.allowed_to?(@to, object.object, **options)
+            yield object, arguments
+          end
+        end
+
+        private
+
+        def underscored_field_name
+          "#{field.instance_variable_get(:@underscored_name)}?".to_sym
+        end
+      end
+
       class ScopeExtension < Extension
         def after_resolve(value:, context:, object:, **_rest)
           return value if value.nil?
@@ -75,7 +97,7 @@ module ActionPolicy
         end
       end
 
-      def initialize(*args, preauthorize: nil, authorize: nil, authorized_scope: nil, **kwargs, &block)
+      def initialize(*args, preauthorize: nil, authorize: nil, authorized_scope: nil, authorize_field: nil, **kwargs, &block)
         if authorize && authorized_scope
           raise ArgumentError, "Only one of `authorize` and `authorized_scope` " \
                                "options could be specified. You can use `preauthorize` along with scoping"
@@ -91,6 +113,7 @@ module ActionPolicy
         add_extension! extensions, AuthorizeExtension, authorize
         add_extension! extensions, ScopeExtension, authorized_scope
         add_extension! extensions, PreauthorizeExtension, preauthorize
+        add_extension! extensions, AuthorizeFieldExtension, authorize_field
 
         super(*args, **kwargs, &block)
       end

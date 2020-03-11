@@ -44,6 +44,14 @@ class PostPolicy < ActionPolicy::Base
     check?(:public?) && allowed_to?(:show?)
   end
 
+  def secret_title?
+    false
+  end
+
+  def silent_secret_title?
+    false
+  end
+
   private
 
   def allow_admins
@@ -102,9 +110,19 @@ end
 
 class PostType < BaseType
   field :title, String, null: false
+  field :secret_title, String, null: false, authorize_field: true
+  field :silent_secret_title, String, null: true, authorize_field: {raise: false}
+  field :another_secret_title, String, null: true, authorize_field: {to: :preview?, with: AnotherPostPolicy}
 
   expose_authorization_rules :edit?, :show?, prefix: "can_"
   expose_authorization_rules :destroy?, prefix: "can_i_"
+
+  def secret_title
+    "Secret #{object.title}"
+  end
+
+  alias silent_secret_title secret_title
+  alias another_secret_title secret_title
 end
 
 class AuthorizedPostType < PostType
