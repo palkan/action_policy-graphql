@@ -24,11 +24,11 @@ matrix:
       gemfile: gemfiles/action_policy/0.3.gemfile
     - rvm: jruby-9.2.8.0
       gemfile: gemfiles/jruby.gemfile
+    - rvm: 2.7
+      gemfile: Gemfile
     - rvm: 2.6
       gemfile: Gemfile
     - rvm: 2.5
-      gemfile: Gemfile
-    - rvm: 2.4
       gemfile: Gemfile
   allow_failures:
     - rvm: ruby-head

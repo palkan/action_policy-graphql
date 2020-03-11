@@ -45,7 +45,7 @@ module ActionPolicy
                   null: false
 
             define_method(gql_field_name) do
-              allowance_to(rule, options)
+              allowance_to(rule, **options)
             end
           end
         end

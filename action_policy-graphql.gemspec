@@ -29,13 +29,13 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 2.4.0"
+  spec.required_ruby_version = ">= 2.5.0"
 
   spec.add_dependency "action_policy", ">= 0.3.0"
   spec.add_dependency "graphql", ">= 1.9.3"
 
   spec.add_development_dependency "bundler", ">= 1.15"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.8"
   spec.add_development_dependency "rubocop", "~> 0.67.0"
   spec.add_development_dependency "rubocop-md", "~> 0.3"
