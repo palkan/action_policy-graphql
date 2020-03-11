@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.4.0 (2010-03-11)
+
 - **Require Ruby 2.5+**. ([@palkan][])
 
 - Add `authorized_field: *` option to perform authorization on the base of the upper object policy prior to resolving fields. ([@sponomarev][])
