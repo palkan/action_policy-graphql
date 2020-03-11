@@ -125,6 +125,16 @@ class PostType < BaseType
   alias another_secret_title secret_title
 end
 
+class PostConnectionWithTotalCountType < GraphQL::Types::Relay::BaseConnection
+  edge_type(PostType.edge_type)
+
+  field :total_count, Integer, null: false
+
+  def total_count
+    object.nodes.size
+  end
+end
+
 class AuthorizedPostType < PostType
   def self.authorized?(object, context)
     super &&
@@ -228,6 +238,8 @@ class Schema < GraphQL::Schema
     field :posts, [PostType], null: false, authorized_scope: {type: :data, with: PostPolicy}
     field :all_posts, [PostType], null: false, preauthorize: {with: PostPolicy}
     field :secret_posts, [PostType], null: false, preauthorize: {to: :view_secret_posts?, with: PostPolicy}
+    field :connected_posts, PostType.connection_type, null: false, authorized_scope: true
+    field :another_connected_posts, PostConnectionWithTotalCountType, null: false, authorized_scope: true, connection: true
 
     def me
       {}
@@ -250,5 +262,7 @@ class Schema < GraphQL::Schema
 
     alias_method :secret_posts, :posts
     alias_method :all_posts, :posts
+    alias_method :connected_posts, :posts
+    alias_method :another_connected_posts, :posts
   end)
 end

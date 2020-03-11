@@ -69,6 +69,46 @@ describe "field extensions", :aggregate_failures do
           .with(Me::PostPolicy)
       end
     end
+
+    context "connections" do
+      let(:query) do
+        %({
+          connectedPosts(first: 1) {
+            nodes {
+              title
+            }
+          }
+        })
+      end
+
+      it "has authorized scope" do
+        expect { subject }.to have_authorized_scope(:data)
+          .with(PostPolicy)
+      end
+
+      context "with connection: true" do
+        let(:query) do
+          %({
+            anotherConnectedPosts(first: 1) {
+              totalCount
+              nodes {
+                title
+              }
+            }
+          })
+        end
+
+        it "has authorized scope" do
+          expect { subject }.to have_authorized_scope(:data)
+            .with(PostPolicy)
+        end
+
+        specify do
+          expect(data["totalCount"]).to eq 1
+          expect(data["nodes"][0]["title"]).to eq "public-b"
+        end
+      end
+    end
   end
 
   context "authorize: *" do
