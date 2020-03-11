@@ -100,11 +100,11 @@ module ActionPolicy
       def initialize(*args, preauthorize: nil, authorize: nil, authorized_scope: nil, authorize_field: nil, **kwargs, &block)
         if authorize && authorized_scope
           raise ArgumentError, "Only one of `authorize` and `authorized_scope` " \
-                               "options could be specified. You can use `preauthorize` along with scoping"
+                               "options could be specified. You can use `preauthorize` or `authorize_field` along with scoping"
         end
 
-        if authorize && preauthorize
-          raise ArgumentError, "Only one of `authorize` and `preauthorize` " \
+        if !!authorize == !!preauthorize ? authorize : authorize_field
+          raise ArgumentError, "Only one of `authorize`, `preauthorize` or `authorize_field` " \
                                "options could be specified."
         end
 
