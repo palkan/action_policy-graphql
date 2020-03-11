@@ -98,7 +98,7 @@ class CityType < ::Common::Graphql::Type
 end
 ```
 
-**NOTE:** you cannot use `authorize: *` and `authorized_scope: *` at the same time but you can combine `preauthorize: *` with `authorized_scope: *`.
+**NOTE:** you cannot use `authorize: *` and `authorized_scope: *` at the same time but you can combine `preauthorize: *` or `authorize_field: *` with `authorized_scope: *`.
 
 ### `preauthorize: *`
 
@@ -126,13 +126,39 @@ end
 **NOTE:** we pass the field's name as the `record` to the policy rule. We assume that preauthorization rules do not depend on
 the record itself and pass the field's name for debugging purposes only.
 
-You can customize the authorization options, e.g. `authorize: {to: :preview?, with: CustomPolicy}`.
+You can customize the authorization options, e.g. `preauthorize: {to: :preview?, with: CustomPolicy}`.
 
 **NOTE:** unlike `authorize: *` you MUST specify the `with: SomePolicy` option.
 The default authorization rule depends on the type of the field:
 
 - for lists we use `index?` (configured by `ActionPolicy::GraphQL.default_preauthorize_list_rule` parameter)
 - for _singleton_ fields we use `show?` (configured by `ActionPolicy::GraphQL.default_preauthorize_node_rule` parameter)
+
+### `authorize_field: *`
+
+If you want to perform authorization before resolving the field value _on the base of the upper object_, you can use `authorize_field: *` option:
+
+```ruby
+field :homes, Home, null: false, authorize_field: true
+
+def homes
+  Home.all
+end
+```
+
+The code above is equal to:
+
+```ruby
+field :homes, [Home], null: false
+
+def homes
+  authorize! object, to: :homes?
+  Home.all
+end
+```
+By default we use `#{underscored_field_name}?` authorization rule.
+
+You can customize the authorization options, e.g. `authorize_field: {to: :preview?, with: CustomPolicy}`.
 
 ### `expose_authorization_rules`
 

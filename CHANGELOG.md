@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+- Add `authorized_field: *` option to perform authorization on the base of the upper object policy prior to resolving fields. ([@sponomarev][])
+
 ## 0.3.2 (2019-12-12)
 
 - Fix compatibility with Action Policy 0.4.0 ([@haines][])
@@ -35,3 +37,4 @@ Action Policy helpers there.
 
 [@palkan]: https://github.com/palkan
 [@haines]: https://github.com/haines
+[@sponomarev]: https://github.com/sponomarev
