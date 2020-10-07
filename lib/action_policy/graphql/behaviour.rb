@@ -36,7 +36,7 @@ module ActionPolicy
 
         base.authorize :user, through: :current_user
 
-        if base.respond_to?(:field_class)
+        if base.respond_to?(:field_class) && !(base.field_class < ActionPolicy::GraphQL::AuthorizedField)
           base.field_class.prepend(ActionPolicy::GraphQL::AuthorizedField)
           base.include ActionPolicy::GraphQL::Fields
         end
