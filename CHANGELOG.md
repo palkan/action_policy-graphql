@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.5.0 (2020-10-07)
+
 - Add `preauthorize_mutation_raise_exception` configuration parameter. ([@palkan][])
 
 Similar to `preauthorize_raise_exception` but only for mutations.
@@ -23,7 +25,7 @@ expose_authorization_rules :show?, field_options: {camelize: false}
 field :can_show, ActionPolicy::GraphQL::Types::AuthorizationResult, null: false, camelize: false
 ```
 
-## 0.4.0 (2010-03-11)
+## 0.4.0 (2020-03-11)
 
 - **Require Ruby 2.5+**. ([@palkan][])
 
