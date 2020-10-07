@@ -80,6 +80,8 @@ You can customize the authorization options, e.g. `authorize: {to: :preview?, wi
 
 If you don't want to raise an exception but return a null instead, you should set a `raise: false` option.
 
+Note: it does not make too much sense to use `authorize` in mutations since it's checking authorization rules after mutation is executed. Therefore `authorize` marked as deprecated when used in mutations and will raise error in future releases.
+
 ### `authorized_scope: *`
 
 You can add `authorized_scope: true` option to the field (list or _connection_ field) to

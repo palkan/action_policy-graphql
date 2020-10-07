@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+- Fix mutations authorization (clean up around `authorize_mutation_raise_exception` configuration parameter). ([@rzaharenkov][])
+
+- Add deprecation for using `authorize` for mutation fields. ([@rzaharenkov][])
+
 ## 0.5.0 (2020-10-07)
 
 - Add `preauthorize_mutation_raise_exception` configuration parameter. ([@palkan][])

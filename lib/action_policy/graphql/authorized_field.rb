@@ -23,14 +23,12 @@ module ActionPolicy
 
       class AuthorizeExtension < Extension
         def apply
-          @to = extract_option(:to) { ::ActionPolicy::GraphQL.default_authorize_rule }
-          @raise = extract_option(:raise) do
-            if field.mutation
-              ::ActionPolicy::GraphQL.authorize_mutation_raise_exception
-            else
-              ::ActionPolicy::GraphQL.authorize_raise_exception
-            end
+          if field.mutation
+            warn "[DEPRECATION] `authorize` for mutation fields is deprecated.  Please use `preauthorize` instead."
           end
+
+          @to = extract_option(:to) { ::ActionPolicy::GraphQL.default_authorize_rule }
+          @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
         end
 
         def after_resolve(value:, context:, object:, **_rest)
