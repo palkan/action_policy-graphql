@@ -22,11 +22,17 @@ module ActionPolicy
       end
 
       class AuthorizeExtension < Extension
+        DEPRECATION_MESSAGE = "`authorize: *` for mutation fields is deprecated.  Please use `preauthorize: *` instead."
+
         class << self
           def show_authorize_mutation_deprecation
             return if defined?(@authorize_mutation_deprecation_shown)
 
-            warn "`authorize: *` for mutation fields is deprecated.  Please use `preauthorize: *` instead."
+            if defined?(ActiveSupport::Deprecation)
+              ActiveSupport::Deprecation.warn(DEPRECATION_MESSAGE)
+            else
+              warn(DEPRECATION_MESSAGE)
+            end
 
             @authorize_mutation_deprecation_shown = true
           end
