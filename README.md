@@ -7,6 +7,7 @@
 This gem provides an integration for using [Action Policy](https://github.com/palkan/action_policy) as an authorization framework for GraphQL applications (built with [`graphql` ruby gem](https://graphql-ruby.org)).
 
 This integration includes the following features:
+
 - Fields & mutations authorization
 - List and connections scoping
 - [**Exposing permissions/authorization rules in the API**](https://evilmartians.com/chronicles/exposing-permissions-in-graphql-apis-with-action-policy).
@@ -21,12 +22,8 @@ This integration includes the following features:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "action_policy-graphql", "~> 0.3"
+gem "action_policy-graphql"
 ```
-
-And then execute:
-
-    $ bundle
 
 ## Usage
 

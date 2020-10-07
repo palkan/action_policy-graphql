@@ -5,6 +5,8 @@ gemspec
 
 gem "pry-byebug", platform: :mri
 
+eval_gemfile "gemfiles/rubocop.gemfile"
+
 local_gemfile = File.join(__dir__, "Gemfile.local")
 
 if File.exist?(local_gemfile)

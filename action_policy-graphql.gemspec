@@ -3,15 +3,15 @@
 require_relative "lib/action_policy/graphql/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "action_policy-graphql"
-  spec.version       = ActionPolicy::GraphQL::VERSION
-  spec.authors       = ["Vladimir Dementyev"]
-  spec.email         = ["dementiev.vm@gmail.com"]
+  spec.name = "action_policy-graphql"
+  spec.version = ActionPolicy::GraphQL::VERSION
+  spec.authors = ["Vladimir Dementyev"]
+  spec.email = ["dementiev.vm@gmail.com"]
 
-  spec.summary       = "Action Policy integration for GraphQL-Ruby"
-  spec.description   = "Action Policy integration for GraphQL-Ruby"
-  spec.homepage      = "https://github.com/palkan/action_policy-graphql"
-  spec.license       = "MIT"
+  spec.summary = "Action Policy integration for GraphQL-Ruby"
+  spec.description = "Action Policy integration for GraphQL-Ruby"
+  spec.homepage = "https://github.com/palkan/action_policy-graphql"
+  spec.license = "MIT"
 
   spec.files = Dir.glob("lib/**/*") + %w[README.md LICENSE.txt CHANGELOG.md]
 
@@ -34,8 +34,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", ">= 1.15"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.8"
-  spec.add_development_dependency "rubocop", "~> 0.67.0"
-  spec.add_development_dependency "rubocop-md", "~> 0.3"
-  spec.add_development_dependency "standard", "~> 0.0.39"
   spec.add_development_dependency "i18n"
 end
