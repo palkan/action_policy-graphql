@@ -20,8 +20,6 @@ matrix:
       gemfile: gemfiles/graphql/master.gemfile
     - rvm: 2.6
       gemfile: gemfiles/action_policy/master.gemfile
-    - rvm: 2.6
-      gemfile: gemfiles/action_policy/0.3.gemfile
     - rvm: jruby-9.2.8.0
       gemfile: gemfiles/jruby.gemfile
     - rvm: 2.7
