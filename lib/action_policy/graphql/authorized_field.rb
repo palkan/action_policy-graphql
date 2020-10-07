@@ -24,7 +24,7 @@ module ActionPolicy
       class AuthorizeExtension < Extension
         def apply
           if field.mutation
-            warn "[DEPRECATION] `authorize` for mutation fields is deprecated.  Please use `preauthorize` instead."
+            warn "[DEPRECATION] `authorize: *` for mutation fields is deprecated.  Please use `preauthorize: *` instead."
           end
 
           @to = extract_option(:to) { ::ActionPolicy::GraphQL.default_authorize_rule }
