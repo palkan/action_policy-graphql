@@ -32,6 +32,10 @@ class PostPolicy < ActionPolicy::Base
     true
   end
 
+  def publish?
+    false
+  end
+
   def public?
     record.title.start_with?("public")
   end
@@ -93,6 +97,14 @@ I18n.backend = I18n::Backend::Simple.new.tap do |backend|
 end
 
 class BaseType < ::GraphQL::Schema::Object
+  include ActionPolicy::GraphQL::Behaviour
+
+  def current_user
+    context.fetch(:user, :user)
+  end
+end
+
+class BaseMutation < ::GraphQL::Schema::Mutation
   include ActionPolicy::GraphQL::Behaviour
 
   def current_user
@@ -205,6 +217,16 @@ module Me
   end
 end
 
+class CreatePostMutation < BaseMutation
+  argument :title, String, required: true
+
+  field :post, PostType, null: false
+
+  def resolve(title:)
+    {post: Post.new(title: title)}
+  end
+end
+
 class Schema < GraphQL::Schema
   class << self
     attr_accessor :posts, :post
@@ -233,11 +255,11 @@ class Schema < GraphQL::Schema
     field :resolved_post, resolver: PostResolver
     field :auth_post, PostType, null: false, authorize: true
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
-    field :secret_post, PostType, null: true, preauthorize: {with: AnotherPostPolicy, raise: false, to: :maybe_preview?}
+    field :secret_post, PostType, null: true, preauthorize: {with: AnotherPostPolicy, to: :maybe_preview?}
     field :another_post, PostType, null: false, authorize: {to: :preview?, with: AnotherPostPolicy}
     field :posts, [PostType], null: false, authorized_scope: {type: :data, with: PostPolicy}
-    field :all_posts, [PostType], null: false, preauthorize: {with: PostPolicy}
-    field :secret_posts, [PostType], null: false, preauthorize: {to: :view_secret_posts?, with: PostPolicy}
+    field :all_posts, [PostType], null: false, preauthorize: {with: PostPolicy, raise: true}
+    field :secret_posts, [PostType], null: false, preauthorize: {to: :view_secret_posts?, with: PostPolicy, raise: true}
     field :connected_posts, PostType.connection_type, null: false, authorized_scope: true
     field :another_connected_posts, PostConnectionWithTotalCountType, null: false, authorized_scope: true, connection: true
 
@@ -264,5 +286,13 @@ class Schema < GraphQL::Schema
     alias_method :all_posts, :posts
     alias_method :connected_posts, :posts
     alias_method :another_connected_posts, :posts
+  end)
+
+  mutation(Class.new(BaseType) do
+    def self.name
+      "Mutation"
+    end
+
+    field :create_post, mutation: CreatePostMutation, null: false, preauthorize: {with: PostPolicy, to: :publish?}
   end)
 end

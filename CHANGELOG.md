@@ -2,6 +2,16 @@
 
 ## master (unreleased)
 
+- Add `preauthorize_mutation_raise_exception` configuration parameter. ([@palkan][])
+
+Similar to `preauthorize_raise_exception` but only for mutations.
+Fallbacks to `preauthorize_raise_exception` unless explicitly specified.
+
+- Add `preauthorize_raise_exception` configuration parameter. ([@palkan][])
+
+Similar to `authorize_raise_exception` but for `preauthorize: true` fields.
+Fallbacks to `authorize_raise_exception` unless explicitly specified.
+
 - Add ability to specify custom field options for `expose_authorization_rules`. ([@bibendi][])
 
 Now you can add additional options for underflying `field` call via `field_options` parameter:

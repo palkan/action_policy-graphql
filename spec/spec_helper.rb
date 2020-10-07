@@ -14,6 +14,9 @@ end
 
 require "action_policy/rspec"
 
+ActionPolicy::GraphQL.preauthorize_raise_exception = false
+ActionPolicy::GraphQL.preauthorize_mutation_raise_exception = true
+
 Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|

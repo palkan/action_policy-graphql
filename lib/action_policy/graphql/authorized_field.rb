@@ -24,7 +24,13 @@ module ActionPolicy
       class AuthorizeExtension < Extension
         def apply
           @to = extract_option(:to) { ::ActionPolicy::GraphQL.default_authorize_rule }
-          @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
+          @raise = extract_option(:raise) do
+            if field.mutation
+              ::ActionPolicy::GraphQL.authorize_mutation_raise_exception
+            else
+              ::ActionPolicy::GraphQL.authorize_raise_exception
+            end
+          end
         end
 
         def after_resolve(value:, context:, object:, **_rest)
@@ -54,7 +60,13 @@ module ActionPolicy
             end
           end
 
-          @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
+          @raise = extract_option(:raise) do
+            if field.mutation
+              ::ActionPolicy::GraphQL.preauthorize_mutation_raise_exception
+            else
+              ::ActionPolicy::GraphQL.preauthorize_raise_exception
+            end
+          end
         end
 
         def resolve(context:, object:, arguments:, **_rest)

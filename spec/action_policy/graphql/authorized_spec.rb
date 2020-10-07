@@ -218,6 +218,28 @@ describe "field extensions", :aggregate_failures do
           .with(PostPolicy)
       end
     end
+
+    context "with mutation" do
+      let(:query) do
+        %(mutation {
+          createPost(title: "GQL") {
+            post {
+              title
+            }
+          }
+        })
+      end
+
+      it "is authorized" do
+        expect { subject }.to be_authorized_to(:publish?, anything)
+          .with(PostPolicy)
+      end
+
+      # See spec_helper.rb for default settings
+      it "raises if authorize_raise_exception is set to false but authorize_mutation_raise_exception is set to true" do
+        expect { subject }.to raise_error(ActionPolicy::Unauthorized)
+      end
+    end
   end
 
   context "preauthorize: *" do
