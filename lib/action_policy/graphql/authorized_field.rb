@@ -22,6 +22,16 @@ module ActionPolicy
       end
 
       class AuthorizeExtension < Extension
+        class << self
+          def show_authorize_mutation_deprecation
+            return if defined?(@authorize_mutation_deprecation_shown)
+
+            warn "`authorize: *` for mutation fields is deprecated.  Please use `preauthorize: *` instead."
+
+            @authorize_mutation_deprecation_shown = true
+          end
+        end
+
         def apply
           self.class.show_authorize_mutation_deprecation if field.mutation
 
@@ -38,16 +48,6 @@ module ActionPolicy
           else
             object.allowed_to?(@to, value, **options) ? value : nil
           end
-        end
-
-        private
-
-        def self.show_authorize_mutation_deprecation
-          return if defined?(@authorize_mutation_deprecation_shown)
-
-          warn "`authorize: *` for mutation fields is deprecated.  Please use `preauthorize: *` instead."
-
-          @authorize_mutation_deprecation_shown = true
         end
       end
 
