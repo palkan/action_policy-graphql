@@ -236,7 +236,7 @@ describe "field extensions", :aggregate_failures do
       end
 
       # See spec_helper.rb for default settings
-      it "raises if authorize_raise_exception is set to false but authorize_mutation_raise_exception is set to true" do
+      it "raises if authorize_raise_exception is set to true" do
         expect { subject }.to raise_error(ActionPolicy::Unauthorized)
       end
     end
