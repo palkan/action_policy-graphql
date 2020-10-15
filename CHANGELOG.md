@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+- Fix modules reloading in development. ([@rzaharenkov][])
+
 ## 0.5.1 (2020-10-08)
 
 - Fix mutations authorization (clean up around `authorize_mutation_raise_exception` configuration parameter). ([@rzaharenkov][])
