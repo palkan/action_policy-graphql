@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.5.2 (2020-10-20)
+
 - Fix modules reloading in development. ([@rzaharenkov][])
 
 ## 0.5.1 (2020-10-08)
