@@ -39,7 +39,7 @@ module ActionPolicy
         end
 
         def apply
-          self.class.show_authorize_mutation_deprecation if field.mutation
+          self.class.show_authorize_mutation_deprecation if field.mutation && field.mutation < ::GraphQL::Schema::Mutation
 
           @to = extract_option(:to) { ::ActionPolicy::GraphQL.default_authorize_rule }
           @raise = extract_option(:raise) { ::ActionPolicy::GraphQL.authorize_raise_exception }
