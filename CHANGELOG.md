@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+- Fix compatibility with graphql-ruby 1.12.4 ([@haines][])
+
 ## 0.5.2 (2020-10-20)
 
 - Fix modules reloading in development. ([@rzaharenkov][])

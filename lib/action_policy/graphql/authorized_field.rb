@@ -114,7 +114,8 @@ module ActionPolicy
       end
 
       class ScopeExtension < Extension
-        def after_resolve(value:, context:, object:, **_rest)
+        def resolve(context:, object:, arguments:, **_rest)
+          value = yield(object, arguments)
           return value if value.nil?
 
           object.authorized_scope(value, **options)
