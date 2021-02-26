@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.5.3 (2021-02-26)
+
 - Fix compatibility with graphql-ruby 1.12.4 ([@haines][])
 
 ## 0.5.2 (2020-10-20)
