@@ -163,6 +163,10 @@ module MyNamespace
     def show?
       true
     end
+
+    def create?
+      admin?
+    end
   end
 
   class PostType < ::AuthorizedPostType
@@ -224,6 +228,30 @@ class CreatePostMutation < BaseMutation
 
   def resolve(title:)
     {post: Post.new(title: title)}
+  end
+end
+
+# Namespaced mutation
+module Mutations
+  module MyNamespace
+    class CreatePostMutation < BaseMutation
+      graphql_name "MyCreatePostMutation"
+
+      argument :title, String, required: true
+
+      field :post, PostType, null: false
+
+      def resolve(title:)
+        authorize! Post, to: :create?
+        {post: Post.new(title: title)}
+      end
+
+      private
+
+      def authorization_namespace
+        ::MyNamespace
+      end
+    end
   end
 end
 
@@ -294,5 +322,7 @@ class Schema < GraphQL::Schema
     end
 
     field :create_post, mutation: CreatePostMutation, null: false, preauthorize: {with: PostPolicy, to: :publish?}
+    field :admin_create_post, mutation: Mutations::MyNamespace::CreatePostMutation, null: false
+    field :admin_create_post_authorized, mutation: Mutations::MyNamespace::CreatePostMutation, null: false, authorize: {to: :create?}
   end)
 end

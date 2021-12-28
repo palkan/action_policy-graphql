@@ -48,6 +48,40 @@ describe ActionPolicy::GraphQL::Behaviour do
       specify do
         expect(data.fetch("title")).to eq "namespaced"
       end
+
+      context "mutation" do
+        let(:query) do
+          %(mutation {
+            adminCreatePost(title: "GQL") {
+              post {
+                title
+              }
+            }
+          })
+        end
+
+        it "is authorized" do
+          expect { subject }.to be_authorized_to(:create?, Post)
+            .with(MyNamespace::PostPolicy)
+        end
+      end
+
+      context "authorized mutation" do
+        let(:query) do
+          %(mutation {
+            adminCreatePostAuthorized(title: "GQL") {
+              post {
+                title
+              }
+            }
+          })
+        end
+
+        it "is authorized" do
+          expect { subject }.to be_authorized_to(:create?, Post)
+            .with(MyNamespace::PostPolicy)
+        end
+      end
     end
   end
 end
