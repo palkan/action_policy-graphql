@@ -82,6 +82,23 @@ describe ActionPolicy::GraphQL::Behaviour do
             .with(MyNamespace::PostPolicy)
         end
       end
+
+      context "overriden namespace" do
+        let(:post) { Post.new("deleted") }
+
+        let(:query) do
+          %(mutation {
+            deletePost(id: "42") {
+              deletedId
+            }
+          })
+        end
+
+        it "is authorized" do
+          expect { subject }.to be_authorized_to(:destroy?, post)
+            .with(MyNamespace::PostPolicy)
+        end
+      end
     end
   end
 end

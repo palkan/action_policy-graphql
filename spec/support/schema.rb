@@ -167,6 +167,10 @@ module MyNamespace
     def create?
       admin?
     end
+
+    def destroy?
+      true
+    end
   end
 
   class PostType < ::AuthorizedPostType
@@ -228,6 +232,26 @@ class CreatePostMutation < BaseMutation
 
   def resolve(title:)
     {post: Post.new(title: title)}
+  end
+end
+
+module WithMyNamespace
+  def authorization_namespace
+    ::MyNamespace
+  end
+end
+
+class DeletePostMutation < BaseMutation
+  include WithMyNamespace
+
+  argument :id, ID, required: true
+
+  field :deleted_id, String, null: false
+
+  def resolve(id:)
+    post = Schema.post
+    authorize! post, to: :destroy?
+    {deleted_id: post.title}
   end
 end
 
@@ -322,6 +346,7 @@ class Schema < GraphQL::Schema
     end
 
     field :create_post, mutation: CreatePostMutation, null: false, preauthorize: {with: PostPolicy, to: :publish?}
+    field :delete_post, mutation: DeletePostMutation, null: false
     field :admin_create_post, mutation: Mutations::MyNamespace::CreatePostMutation, null: false
     field :admin_create_post_authorized, mutation: Mutations::MyNamespace::CreatePostMutation, null: false, authorize: {to: :create?}
   end)
