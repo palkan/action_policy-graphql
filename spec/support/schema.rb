@@ -133,8 +133,8 @@ class PostType < BaseType
     "Secret #{object.title}"
   end
 
-  alias silent_secret_title secret_title
-  alias another_secret_title secret_title
+  alias_method :silent_secret_title, :secret_title
+  alias_method :another_secret_title, :secret_title
 end
 
 class PostConnectionWithTotalCountType < GraphQL::Types::Relay::BaseConnection
@@ -217,7 +217,7 @@ module Me
       Me.posts
     end
 
-    alias all_posts posts
+    alias_method :all_posts, :posts
   end
 end
 

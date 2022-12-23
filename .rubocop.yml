@@ -1,5 +1,5 @@
 require:
-  - standard/cop/semantic_blocks
+  - standard/cop/block_single_line_braces
 
 inherit_gem:
   standard: config/base.yml
@@ -13,19 +13,14 @@ AllCops:
     - 'gemfiles/**/*'
     - 'lib/generators/**/templates/**/*'
   DisplayCopNames: true
+  SuggestExtensions: false
   TargetRubyVersion: 2.5
 
-Standard/SemanticBlocks:
+Standard/BlockSingleLineBraces:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: true
-
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: no_comma
-
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: no_comma
 
 Naming/FileName:
   Exclude:

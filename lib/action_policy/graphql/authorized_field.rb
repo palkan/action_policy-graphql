@@ -128,7 +128,7 @@ module ActionPolicy
                                "options could be specified. You can use `preauthorize` or `authorize_field` along with scoping"
         end
 
-        if !!authorize == !!preauthorize ? authorize : authorize_field
+        if (!!authorize == !!preauthorize) ? authorize : authorize_field
           raise ArgumentError, "Only one of `authorize`, `preauthorize` or `authorize_field` " \
                                "options could be specified."
         end
