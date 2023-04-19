@@ -294,6 +294,16 @@ class Schema < GraphQL::Schema
     end
   end
 
+  module Sources
+    class Post < GraphQL::Dataloader::Source
+      def fetch(_handles)
+        [Schema.post]
+      end
+    end
+  end
+
+  use GraphQL::Dataloader
+
   query(Class.new(BaseType) do
     def self.name
       "Query"
@@ -308,6 +318,7 @@ class Schema < GraphQL::Schema
     field :auth_post, PostType, null: false, authorize: true
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
     field :secret_post, PostType, null: true, preauthorize: {with: AnotherPostPolicy, to: :maybe_preview?}
+    field :very_secret_post, PostType, null: false, authorize: {to: :view_secret_posts?}
     field :another_post, PostType, null: false, authorize: {to: :preview?, with: AnotherPostPolicy}
     field :posts, [PostType], null: false, authorized_scope: {type: :data, with: PostPolicy}
     field :all_posts, [PostType], null: false, preauthorize: {with: PostPolicy, raise: true}
@@ -320,7 +331,7 @@ class Schema < GraphQL::Schema
     end
 
     def post
-      Schema.post
+      dataloader.with(Sources::Post).load(:first)
     end
 
     alias_method :authorized_post, :post
@@ -329,6 +340,7 @@ class Schema < GraphQL::Schema
     alias_method :another_post, :post
     alias_method :non_raising_post, :post
     alias_method :secret_post, :post
+    alias_method :very_secret_post, :secret_post
 
     def posts
       Schema.posts

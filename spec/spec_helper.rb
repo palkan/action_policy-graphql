@@ -21,6 +21,7 @@ Dir["#{__dir__}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.mock_with :rspec
+  config.threadsafe = false
 
   config.example_status_persistence_file_path = "tmp/rspec_examples.txt"
   config.filter_run :focus

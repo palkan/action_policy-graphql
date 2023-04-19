@@ -391,4 +391,38 @@ describe "field extensions", :aggregate_failures do
       end
     end
   end
+
+  fcontext "multiple fields with dataloader" do
+    let(:user) { :user }
+    let(:post) { Post.new("private-a") }
+    let(:query) do
+      %({
+          post {
+            title
+          }
+          nonRaisingPost {
+            title
+          }
+          secretPost {
+            title
+          }
+        })
+    end
+
+    before do
+      ActionPolicy::PerThreadCache.enabled = true
+      allow(Schema).to receive(:post) { post }
+    end
+
+    after do
+      ActionPolicy::PerThreadCache.enabled = false
+    end
+
+    specify do
+      expect(result.fetch("data").keys).to match_array(["post", "nonRaisingPost", "secretPost"])
+      expect(result.dig("data", "nonRaisingPost")).to be_nil
+      expect(result.dig("data", "post")).not_to be_nil
+      expect(result.dig("data", "secretPost")).to be_nil
+    end
+  end
 end
