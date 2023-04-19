@@ -3,7 +3,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in action_policy-graphql.gemspec
 gemspec
 
-gem "pry-byebug", platform: :mri
+gem "debug", platform: :mri
 
 eval_gemfile "gemfiles/rubocop.gemfile"
 
