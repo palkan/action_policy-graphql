@@ -8,7 +8,7 @@ ENV["RACK_ENV"] = "test"
 require "i18n"
 require "action_policy-graphql"
 begin
-  require "pry-byebug"
+  require "debug" unless ENV["CI"]
 rescue LoadError
 end
 
