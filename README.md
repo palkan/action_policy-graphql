@@ -5,6 +5,9 @@
 
 # Action Policy GraphQL
 
+<img align="right" height="150" width="129"
+     title="Action Policy logo" src="./assets/logo.svg">
+
 This gem provides an integration for using [Action Policy](https://github.com/palkan/action_policy) as an authorization framework for GraphQL applications (built with [`graphql` ruby gem](https://graphql-ruby.org)).
 
 This integration includes the following features:
