@@ -309,8 +309,14 @@ class Schema < GraphQL::Schema
     field :non_raising_post, PostType, null: true, authorize: {raise: false}
     field :secret_post, PostType, null: true, preauthorize: {with: AnotherPostPolicy, to: :maybe_preview?}
     field :another_post, PostType, null: false, authorize: {to: :preview?, with: AnotherPostPolicy}
+
     field :posts, [PostType], null: false, authorized_scope: {type: :data, with: PostPolicy}
-    field :all_posts, [PostType], null: false, preauthorize: {with: PostPolicy, raise: true}
+
+    # Test that shared options object is not mutated
+    base_options = {with: PostPolicy, raise: true}
+    field :all_posts_new, [PostType], null: false, preauthorize: base_options
+    field :all_posts, [PostType], null: false, preauthorize: base_options
+
     field :secret_posts, [PostType], null: false, preauthorize: {to: :view_secret_posts?, with: PostPolicy, raise: true}
     field :connected_posts, PostType.connection_type, null: false, authorized_scope: true
     field :another_connected_posts, PostConnectionWithTotalCountType, null: false, authorized_scope: true, connection: true

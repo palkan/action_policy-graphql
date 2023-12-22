@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+- Do not mutate passed field options. ([@palkan][])
+
+  Fixes compatibility with `with_options` approach.
+
 ## 0.5.3 (2021-02-26)
 
 - Fix compatibility with graphql-ruby 1.12.4 ([@haines][])
@@ -80,3 +84,4 @@ Action Policy helpers there.
 [@haines]: https://github.com/haines
 [@sponomarev]: https://github.com/sponomarev
 [@bibendi]: https://github.com/bibendi
+[@rzaharenkov]: https://github.com/rzaharenkov

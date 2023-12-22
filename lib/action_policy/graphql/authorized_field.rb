@@ -14,6 +14,10 @@ module ActionPolicy
     #   end
     module AuthorizedField
       class Extension < ::GraphQL::Schema::FieldExtension
+        def initialize(field:, options:)
+          super(field: field, options: options&.dup || {})
+        end
+
         def extract_option(key, &default)
           value = options.fetch(key, &default)
           options.delete key
