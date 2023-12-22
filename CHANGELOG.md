@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+## 0.5.4 (2023-12-22)
+
 - Do not mutate passed field options. ([@palkan][])
 
   Fixes compatibility with `with_options` approach.
