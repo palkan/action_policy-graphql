@@ -17,7 +17,7 @@ module ActionPolicy
         base.extend ActionPolicy::Behaviours::Namespaced
 
         # Authorization context could't be defined for the class
-        def base.authorization_context
+        def base.build_authorization_context
           {}
         end
 

@@ -27,8 +27,8 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.5.0"
 
-  spec.add_dependency "action_policy", ">= 0.5.0"
-  spec.add_dependency "ruby-next-core", ">= 0.10.0"
+  spec.add_dependency "action_policy", "~> 0.7"
+  spec.add_dependency "ruby-next-core", "~> 1.0"
   spec.add_dependency "graphql", ">= 1.9.3"
 
   spec.add_development_dependency "bundler", ">= 1.15"

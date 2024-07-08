@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 0.6.0 (2024-07-08)
+
+- Fix compatibility with Action Policy 0.7.0. ([@palkan][])
+
 ## 0.5.4 (2023-12-22)
 
 - Do not mutate passed field options. ([@palkan][])

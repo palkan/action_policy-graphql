@@ -113,7 +113,7 @@ module ActionPolicy
         private
 
         def underscored_field_name
-          "#{field.instance_variable_get(:@underscored_name)}?".to_sym
+          :"#{field.instance_variable_get(:@underscored_name)}?"
         end
       end
 
