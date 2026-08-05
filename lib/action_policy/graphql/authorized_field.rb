@@ -69,7 +69,7 @@ module ActionPolicy
           end
 
           @to = extract_option(:to) do
-            if field.type.list?
+            if field.type.list? || field.connection?
               ::ActionPolicy::GraphQL.default_preauthorize_list_rule
             else
               ::ActionPolicy::GraphQL.default_preauthorize_node_rule

@@ -316,6 +316,7 @@ class Schema < GraphQL::Schema
     base_options = {with: PostPolicy, raise: true}
     field :all_posts_new, [PostType], null: false, preauthorize: base_options
     field :all_posts, [PostType], null: false, preauthorize: base_options
+    field :paginated_posts, PostType.connection_type, null: false, preauthorize: base_options
 
     field :secret_posts, [PostType], null: false, preauthorize: {to: :view_secret_posts?, with: PostPolicy, raise: true}
     field :connected_posts, PostType.connection_type, null: false, authorized_scope: true
@@ -342,6 +343,7 @@ class Schema < GraphQL::Schema
 
     alias_method :secret_posts, :posts
     alias_method :all_posts, :posts
+    alias_method :paginated_posts, :posts
     alias_method :connected_posts, :posts
     alias_method :another_connected_posts, :posts
   end)

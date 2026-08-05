@@ -288,6 +288,23 @@ describe "field extensions", :aggregate_failures do
             .with(PostPolicy)
         end
       end
+
+      context "with relay connection" do
+        let(:query) do
+          %({
+              paginatedPosts {
+                nodes {
+                  title
+                }
+              }
+            })
+        end
+
+        it "is authorized" do
+          expect { subject }.to be_authorized_to(:index?, "paginatedPosts")
+            .with(PostPolicy)
+        end
+      end
     end
 
     context "field" do

@@ -135,7 +135,7 @@ You can customize the authorization options, e.g. `preauthorize: {to: :preview?,
 **NOTE:** unlike `authorize: *` you MUST specify the `with: SomePolicy` option.
 The default authorization rule depends on the type of the field:
 
-- for lists we use `index?` (configured by `ActionPolicy::GraphQL.default_preauthorize_list_rule` parameter)
+- for lists and relay connection types we use `index?` (configured by `ActionPolicy::GraphQL.default_preauthorize_list_rule` parameter)
 - for _singleton_ fields we use `show?` (configured by `ActionPolicy::GraphQL.default_preauthorize_node_rule` parameter)
 
 ### `authorize_field: *`

@@ -2,6 +2,8 @@
 
 ## master (unreleased)
 
+- Preauthorize relay connection types with `index?` instead of `show?`. ([@bbenno][])
+
 ## 0.6.0 (2024-07-08)
 
 - Fix compatibility with Action Policy 0.7.0. ([@palkan][])
@@ -91,3 +93,4 @@ Action Policy helpers there.
 [@sponomarev]: https://github.com/sponomarev
 [@bibendi]: https://github.com/bibendi
 [@rzaharenkov]: https://github.com/rzaharenkov
+[@bbenno]: https://github.com/bbenno
